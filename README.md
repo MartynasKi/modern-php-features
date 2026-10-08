@@ -4,7 +4,7 @@ First of all... Hello!
 
 I am Martynas Ki. 👋 And nice to meet you!
 
-After over a decade of writing code, there is still plenty to learn.
+Even after more than a decade of coding, there is always something new to learn or something old to remember.
 From time to time, I share what I discover on my
 [Laraholic blog](https://laraholic.com/), where I write about Laravel, PHP
 and whatever else catches my interest.
@@ -20,10 +20,10 @@ that I do not use every day. 🤓
 
 ## How to run
 
-1. Clone the repository. Replace `REPOSITORY_URL` with its GitHub clone URL.
+1. Clone the repository.
 
    ```shell
-   git clone REPOSITORY_URL modern-php-features
+   git clone https://github.com/MartynasKi/modern-php-features.git
    cd modern-php-features
    ```
 

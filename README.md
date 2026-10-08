@@ -5,13 +5,11 @@ First of all... Hello!
 I am Martynas Ki. 👋 And nice to meet you!
 
 Even after more than a decade of coding, there is always something new to learn or something old to remember.
-From time to time, I share what I discover on my
-[Laraholic blog](https://laraholic.com/), where I write about Laravel, PHP
-and whatever else catches my interest.
 
-I decided to revisit modern PHP and refresh my understanding of how things
-work under the hood. I especially want to explore native language features
-that I do not use every day. 🤓
+From time to time, I share what I discover on my [Laraholic blog](https://laraholic.com/), where I write about Laravel, PHP or whatever else 
+catches my interest.
+
+So... here I am, revisiting modern PHP and refreshing my understanding of how things really work under the hood. 🤓
 
 ## Requirements
 
@@ -48,5 +46,6 @@ See each topic README for explanations and example commands.
 
 ---
 
-This is a personal learning project, not an authoritative reference. If you
-spot a mistake or have a suggestion, please let me know.
+This is a personal learning project, not an authoritative reference.
+
+If you spot a mistake or have a suggestion, please let me know.

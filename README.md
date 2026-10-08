@@ -34,15 +34,15 @@ So... here I am, revisiting modern PHP and refreshing my understanding of how th
 3. Run an example.
 
    ```shell
-   php ./001-fibers/examples/01-basic-fiber.php
+   php ./002-fibers/examples/01-basic-fiber.php
    ```
 
 See each topic README for explanations and example commands.
 
-## Topics to explore
+## PHP topics to explore
 
-- [001: Fibers](001-fibers/README.md): three examples covering execution state,
-  passing values and reading the final result.
+- [002: Fibers](002-fibers/README.md): pause and resume a function, pass values
+  in and out, read its return value and run several fibers in a loop.
 
 ---
 

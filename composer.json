@@ -1,0 +1,21 @@
+{
+    "name": "laraholic/modern-php-features",
+    "description": "My notes and small code examples while revisiting modern PHP.",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": "^8.5"
+    },
+    "scripts": {
+        "format": "pint",
+        "format:check": "pint --test"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "require-dev": {
+        "laravel/pint": "^1.32",
+        "symfony/console": "^8.1",
+        "symfony/var-dumper": "^8.1"
+    }
+}

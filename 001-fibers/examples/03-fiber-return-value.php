@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 require __DIR__ . '/../../bootstrap.php';
 
-$io->title('Reading the final return value');
+title('Reading the final return value');
 
 $fiber = new Fiber(function (): int {
     $total = 20 + 22;
@@ -16,19 +16,19 @@ $fiber = new Fiber(function (): int {
 
 $fiber->start();
 
-$io->section('While suspended');
+section('While suspended');
 dump(['terminated' => $fiber->isTerminated()]);
 
 try {
     $fiber->getReturn();
 } catch (FiberError $error) {
-    $io->text('getReturn() throws FiberError before the fiber finishes.');
+    text('getReturn() throws FiberError before the fiber finishes.');
     dump($error->getMessage());
 }
 
 $resumeResult = $fiber->resume();
 
-$io->section('After completion');
+section('After completion');
 dump(['terminated' => $fiber->isTerminated()]);
 
 if ($fiber->isTerminated()) {

@@ -8,4 +8,29 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 require __DIR__ . '/vendor/autoload.php';
 
-$io = new SymfonyStyle(new ArgvInput(), new ConsoleOutput());
+function io(): SymfonyStyle
+{
+    static $io;
+
+    return $io ??= new SymfonyStyle(new ArgvInput(), new ConsoleOutput());
+}
+
+function title(string $message): void
+{
+    io()->title($message);
+}
+
+function section(string $message): void
+{
+    io()->section($message);
+}
+
+function text(string|array $message): void
+{
+    io()->text($message);
+}
+
+function success(string|array $message): void
+{
+    io()->success($message);
+}

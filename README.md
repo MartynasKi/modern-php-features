@@ -9,7 +9,7 @@ Even after more than a decade of coding, there is always something new to learn 
 From time to time, I share what I discover on my [Laraholic blog](https://laraholic.com/), where I write about Laravel, PHP or whatever else 
 catches my interest.
 
-So... here I am, revisiting modern PHP and refreshing my understanding of how things really work under the hood. 🤓
+So... here I am, revisiting modern PHP and refreshing my understanding of how things *really* work under the hood. 🤓
 
 ## Requirements
 

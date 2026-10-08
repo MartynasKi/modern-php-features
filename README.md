@@ -41,8 +41,8 @@ See each topic README for explanations and example commands.
 
 ## PHP topics to explore
 
-- [001: Fundamentals](001-fundamentals/README.md): small PHP basics such as
-  strict types and static variables.
+- [001: Fundamentals](001-fundamentals/README.md): how PHP runs your code,
+  OPcache and JIT, how values live in memory, strict types and type juggling.
 - [002: Fibers](002-fibers/README.md): pause and resume a function, pass values
   in and out, read its return value and run several fibers in a loop.
 

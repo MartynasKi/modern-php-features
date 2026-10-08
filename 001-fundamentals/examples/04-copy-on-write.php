@@ -7,17 +7,20 @@ require __DIR__ . '/../../bootstrap.php';
 title('Copy-on-write');
 
 $start = memory_get_usage();
+$used = fn(): string => round((memory_get_usage() - $start) / 1_048_576, 1) . ' MB';
+
 $original = range(1, 100_000);
-$afterCreate = memory_get_usage();
+$afterCreate = $used();
 
 $copy = $original;
-$afterAssign = memory_get_usage();
+$afterAssign = $used();
 
 $copy[] = 100_001;
-$afterWrite = memory_get_usage();
+$afterChange = $used();
 
+// Measure first and dump once, so VarDumper's own memory does not skew the numbers.
 dump([
-    'create the array' => $afterCreate - $start,
-    'assign it to $copy' => $afterAssign - $afterCreate,
-    'change $copy' => $afterWrite - $afterAssign,
+    'after creating $original' => $afterCreate,
+    'after $copy = $original' => $afterAssign,
+    'after changing $copy' => $afterChange,
 ]);

@@ -12,10 +12,12 @@ $b = $a;
 $b = 2;
 dump(['$a' => $a, '$b' => $b]);
 
-section('Reference');
+section('Reference (same value)');
 $a = 1;
 $b = &$a;
 $b = 2;
+
+// $a becomes 2, because $b is a reference to $a
 dump(['$a' => $a, '$b' => $b]);
 
 section('The foreach gotcha');
@@ -25,8 +27,7 @@ foreach ($numbers as &$number) {
     $number *= 2;
 }
 
-// $number still points to the last element, so this loop overwrites it.
-foreach ($numbers as $number) {
-}
+// $number still points to the last element, so this changes 6 to 1000.
+$number = 1_000;
 
 dump($numbers);

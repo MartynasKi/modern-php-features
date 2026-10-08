@@ -3,6 +3,9 @@
 Small PHP basics worth a second look, from how PHP runs a file to how it
 stores values. Some subtopics have an example script and some are only notes.
 
+Some of these matter a lot when you build or tune high-performance PHP apps,
+especially OPcache, the JIT, copy-on-write and long-running runtimes.
+
 This project uses PHP 8.5. Run the examples from the repository root after
 `composer install`.
 
@@ -16,11 +19,13 @@ source code -> tokens -> AST -> opcodes -> Zend VM -> output
 
 1. The lexer splits the source into tokens such as `$name`, `=` and `'PHP'`.
 2. The parser turns the tokens into an abstract syntax tree (AST).
-3. The compiler turns the AST into opcodes, small instructions for the engine.
-4. The Zend VM executes the opcodes one by one.
+3. The compiler turns the AST into opcodes. Opcodes are PHP's bytecode: small
+   instructions for the engine.
+4. The Zend VM executes the opcodes one by one. Each opcode has a handler
+   written in C, so the VM interprets your code instead of turning it into
+   machine code. Only the JIT compiles opcodes to machine code.
 
-You can see the tokens yourself with `PhpToken::tokenize()`. The opcodes are
-covered below.
+You can see the tokens yourself with `PhpToken::tokenize()`.
 
 ## Request lifecycle
 
@@ -31,7 +36,8 @@ PHP has two kinds of setup work: once per process and once per request.
 - Per request: fill the superglobals, run the script and then free every
   variable, object and resource it created.
 
-How often each happens depends on how PHP runs:
+How often each happens depends on the runtime: whatever starts PHP and
+decides how long its process stays alive.
 
 - CLI: one process runs one script and then exits.
 - PHP-FPM: a pool of worker processes stays alive. Each worker handles many
@@ -61,18 +67,29 @@ after. If you use Laravel Herd, also add `-d auto_prepend_file=` because Herd
 loads one of its own files before every script. Other tools for this are
 `phpdbg -p*` and the VLD extension.
 
-### 01-opcodes.php
+### [01-opcodes.php](examples/01-opcodes.php)
 
 The script prints the same greeting twice. Concatenation with `.` compiles to
 two `CONCAT` opcodes. Interpolation with `"Hello {$name}\n"` compiles to
 `ROPE_INIT`, `ROPE_ADD` and `ROPE_END`, which build the string in one go.
-This script skips the bootstrap so the dump only shows this file.
+This script skips [bootstrap.php](../bootstrap.php) so the dump only shows this file.
 
 ## OPcache
 
 Without OPcache, PHP repeats the whole pipeline for every file on every
-request. OPcache stores the compiled opcodes in shared memory. The next request
-skips lexing, parsing and compiling and goes straight to execution.
+request. OPcache stores the compiled opcodes in shared memory instead.
+
+First request for a file (cache miss):
+
+```text
+source file -> tokens -> AST -> opcodes -> save in OPcache -> Zend VM -> output
+```
+
+Later requests for the same file (cache hit):
+
+```text
+OPcache lookup -> opcodes from shared memory -> Zend VM -> output
+```
 
 Since PHP 8.5, OPcache is always built into PHP. Common settings:
 
@@ -108,12 +125,12 @@ often and compiles them into machine code for your CPU.
 This helps code that spends its time inside PHP itself, such as math loops.
 A typical web app spends most of its time waiting for the database or the
 network. It also spends time inside functions like `md5()` that are already
-written in C. The JIT cannot speed up either of those.
+written in C. **The JIT cannot speed up either of those.**
 
 Since PHP 8.4, the JIT is turned off with `opcache.jit=disable` by default.
 Turn it on with `opcache.jit=tracing`.
 
-### 02-jit.php
+### [02-jit.php](examples/02-jit.php)
 
 The script times two functions. `math()` runs a plain arithmetic loop.
 `strings()` mostly calls `str_repeat()`, `md5()` and `strlen()`. Run it
@@ -150,7 +167,7 @@ right away.
 
 `debug_zval_dump()` shows the counter as `refcount`.
 
-### 03-refcounting.php
+### [03-refcounting.php](examples/03-refcounting.php)
 
 The object starts at `refcount(2)`, goes to `refcount(3)` after
 `$second = $first` and back to `refcount(2)` after `unset($second)`. Each count
@@ -167,11 +184,12 @@ Assigning an array to another variable does not copy it. Both variables share
 the same array and the refcount goes up. PHP only makes a real copy when one
 of them is changed.
 
-### 04-copy-on-write.php
+### [04-copy-on-write.php](examples/04-copy-on-write.php)
 
-`memory_get_usage()` shows the bytes used after each step. Creating 100,000
-numbers uses about 4 MB. Assigning the array to `$copy` adds `0` bytes.
-Adding one element to `$copy` copies the whole array and adds another 4 MB.
+The script compares memory use with the start after each step. Creating
+100,000 numbers takes 4 MB. After `$copy = $original` it is still 4 MB, because
+both variables share one array. Adding one element to `$copy` makes PHP copy
+the whole array, so it jumps to 8 MB.
 
 ```shell
 php ./001-fundamentals/examples/04-copy-on-write.php
@@ -183,36 +201,18 @@ php ./001-fundamentals/examples/04-copy-on-write.php
 same value, so changing one changes the other.
 
 The classic gotcha: after `foreach ($numbers as &$number)`, `$number` is still
-a reference to the last element. A second loop that reuses `$number` writes
-into that element on every step. Call `unset($number)` after a by-reference
-loop to avoid it.
+a reference to the last element. Any later write to `$number`, such as a
+second loop that reuses the name, changes that element. Call `unset($number)`
+after a by-reference loop to avoid it.
 
-### 05-references.php
+### [05-references.php](examples/05-references.php)
 
 The copy leaves `$a` at `1` and the reference changes it to `2`. Then the
-foreach gotcha turns `[2, 4, 6]` into `[2, 4, 4]`.
+foreach gotcha: one `$number = 1_000;` after the loop turns `[2, 4, 6]` into
+`[2, 4, 1000]`.
 
 ```shell
 php ./001-fundamentals/examples/05-references.php
-```
-
-## Garbage collector
-
-Refcounting fails when two values point to each other. Even when no variable
-uses them anymore, each still holds the other, so neither count reaches zero.
-
-PHP has a cycle collector for this. It keeps a list of values that might be
-part of a cycle and checks them from time to time, or when you call
-`gc_collect_cycles()`. Values that only reference each other get freed.
-
-### 06-garbage-collector.php
-
-Two nodes point to each other. After `unset($a, $b)` their destructors do not
-run. `gc_collect_cycles()` destroys both and returns `2`, the number of
-collected values.
-
-```shell
-php ./001-fundamentals/examples/06-garbage-collector.php
 ```
 
 ## Strict types
@@ -232,17 +232,13 @@ For return values, the file where the function is defined decides.
 Operators such as `+` and comparisons such as `==` still convert types as
 before.
 
-Every example in this project starts with strict types, so type mistakes show
-up right away.
+### [06-strict-types.php](examples/06-strict-types.php)
 
-### 07-strict-types.php
-
-`double(5)` and `half(5)` work. `double('5')` and `strlen(123)` throw a
-`TypeError`, which also applies to built-in functions. `'5' + 1` and `'5' == 5`
-still work because strict types do not touch operators.
+`double(5)` and `half(5)` work. `double('5')` throws a `TypeError` and so does
+the built-in `strlen(123)`. `'5' + 1` and `'5' == 5` still work.
 
 ```shell
-php ./001-fundamentals/examples/07-strict-types.php
+php ./001-fundamentals/examples/06-strict-types.php
 ```
 
 ## Type juggling
@@ -251,19 +247,19 @@ php ./001-fundamentals/examples/07-strict-types.php
 of the surprises.
 
 PHP 8 fixed the worst one. Comparing a number with a non-numeric string now
-compares them as strings. So `0 == 'a'` is `false` in PHP 8, but it was `true`
-in PHP 7. Numeric strings are still compared as numbers, so `'1' == '01'` and
+compares them as strings. **So `0 == 'a'` is `false` in PHP 8, but it was `true`
+in PHP 7.** Numeric strings are still compared as numbers, so `'1' == '01'` and
 `'10' == '1e1'` are `true`.
 
-Use `===` when the type matters. It compares both the type and the value.
+Rule of thumb: use `===` by default. It compares both the type and the value.
 
-### 08-type-juggling.php
+### [07-type-juggling.php](examples/07-type-juggling.php)
 
 The script dumps a few loose comparisons that are all `true` except
 `0 == 'a'`. Then it shows `===` returning `false` for the same kind of cases.
 
 ```shell
-php ./001-fundamentals/examples/08-type-juggling.php
+php ./001-fundamentals/examples/07-type-juggling.php
 ```
 
 ## Static variables
@@ -297,12 +293,12 @@ function io(): SymfonyStyle
 
 The first call creates the object. Every later call returns the same one.
 
-### 09-static-variables.php
+### [08-static-variables.php](examples/08-static-variables.php)
 
 Call `counter()` three times and dump the results: `1`, `2` and `3`.
 
 ```shell
-php ./001-fundamentals/examples/09-static-variables.php
+php ./001-fundamentals/examples/08-static-variables.php
 ```
 
 ## Memory and performance habits
@@ -341,6 +337,5 @@ something really costs, measure it with `memory_get_usage()`,
 - `phpdbg` can step through code and print opcodes with `phpdbg -p*`.
 
 The PHP manual has more on [OPcache](https://www.php.net/manual/en/book.opcache.php),
-[references](https://www.php.net/manual/en/language.references.php),
-[garbage collection](https://www.php.net/manual/en/features.gc.php) and
+[references](https://www.php.net/manual/en/language.references.php) and
 [type juggling](https://www.php.net/manual/en/language.types.type-juggling.php).

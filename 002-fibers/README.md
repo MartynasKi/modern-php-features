@@ -22,7 +22,7 @@ still blocks everything.
 This project uses PHP 8.5, but fibers work since PHP 8.1. Run these commands
 from the repository root after `composer install`.
 
-### 01-basic-fiber.php
+### [01-basic-fiber.php](examples/01-basic-fiber.php)
 
 Start a fiber, let it pause and then resume it. The output shows how control
 jumps between the main code and the fiber.
@@ -31,7 +31,7 @@ jumps between the main code and the fiber.
 php ./002-fibers/examples/01-basic-fiber.php
 ```
 
-### 02-passing-values.php
+### [02-passing-values.php](examples/02-passing-values.php)
 
 Values travel both ways. `start()` sends a name in and gets back the question
 passed to `suspend()`. `resume()` sends the answer in and `suspend()` returns it
@@ -41,7 +41,7 @@ inside the fiber.
 php ./002-fibers/examples/02-passing-values.php
 ```
 
-### 03-return-value.php
+### [03-return-value.php](examples/03-return-value.php)
 
 When the callback finishes, `getReturn()` gives you its return value. Here it
 is `42`. Calling `getReturn()` before the fiber finishes throws `FiberError`.
@@ -50,7 +50,7 @@ is `42`. Calling `getReturn()` before the fiber finishes throws `FiberError`.
 php ./002-fibers/examples/03-return-value.php
 ```
 
-### 04-foreach-loop.php
+### [04-foreach-loop.php](examples/04-foreach-loop.php)
 
 Two fibers share one callback, but each gets its own list of steps through
 `start()`. Task A has three steps and Task B has five. A small loop resumes

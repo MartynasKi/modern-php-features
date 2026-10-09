@@ -6,12 +6,14 @@ require __DIR__ . '/../../bootstrap.php';
 
 title('Pure and backed enums');
 
+// Pure enum
 enum Suit
 {
     case Hearts;
     case Spades;
 }
 
+// Backed enum
 enum Status: string
 {
     case Draft = 'draft';

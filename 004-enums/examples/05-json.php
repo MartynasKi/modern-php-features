@@ -39,3 +39,5 @@ try {
 section('serialize() works for both kinds');
 dump(serialize(Suit::Hearts));
 dump(unserialize(serialize(Suit::Hearts)) === Suit::Hearts);
+dump(serialize(Status::Published));
+dump(unserialize(serialize(Status::Published)) === Status::Published);

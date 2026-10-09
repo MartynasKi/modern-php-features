@@ -13,7 +13,7 @@ instance of it, so `Status::Draft === Status::Draft` is always true.
 - Enums can have methods, static methods, constants and interfaces.
 - Enums cannot have properties or be extended, and you cannot create cases
   with `new`.
-- Every enum implements `UnitEnum`. Backed enums also implement `BackedEnum`.
+- Every enum implements `UnitEnum` interface. Backed enums also implement `BackedEnum`.
 
 Enums replace class constants such as `const STATUS_DRAFT = 'draft'`. A
 constant is just a string, so any string slips through. An enum type only

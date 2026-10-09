@@ -8,7 +8,7 @@ title('Methods, interfaces and constants');
 
 interface HasLabel
 {
-    public function label(): string;
+    public function getLabel(): string;
 }
 
 enum Status: string implements HasLabel
@@ -19,7 +19,7 @@ enum Status: string implements HasLabel
 
     public const DEFAULT = self::Draft;
 
-    public function label(): string
+    public function getLabel(): string
     {
         return ucfirst($this->value);
     }
@@ -29,18 +29,18 @@ enum Status: string implements HasLabel
         return $this === self::Published;
     }
 
-    public static function visible(): array
+    public static function getVisible(): array
     {
         return array_filter(self::cases(), fn(self $status) => $status->isVisible());
     }
 }
 
 section('Instance methods');
-dump(Status::Archived->label());
+dump(Status::Archived->getLabel());
 dump(Status::Archived->isVisible());
 
 section('Static method');
-dump(Status::visible());
+dump(Status::getVisible());
 
 section('Constant that points to a case');
 dump(Status::DEFAULT);

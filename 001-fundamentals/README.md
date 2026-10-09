@@ -122,6 +122,15 @@ gives most of the gain.
 The JIT arrived in PHP 8.0 as part of OPcache. It watches which opcodes run
 often and compiles them into machine code for your CPU.
 
+```text
+source code -> opcodes -> JIT -> native machine code -> CPU
+```
+
+There is one important detail: the JIT does not replace the Zend VM. Code
+runs in the VM until the JIT decides it is hot enough to compile. Even
+compiled code jumps back to the VM for operations the JIT does not handle
+itself.
+
 This helps code that spends its time inside PHP itself, such as math loops.
 A typical web app spends most of its time waiting for the database or the
 network. It also spends time inside functions like `md5()` that are already

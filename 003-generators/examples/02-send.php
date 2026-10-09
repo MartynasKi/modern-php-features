@@ -11,7 +11,8 @@ function runningTotal(): Generator
     $total = 0;
 
     while (true) {
-        // yield sends $total out and receives the value passed to send().
+        // yield works both ways. It sends $total out and pauses here.
+        // On resume, the value passed to send() comes back in as $amount.
         $amount = yield $total;
         $total += $amount;
     }

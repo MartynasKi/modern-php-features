@@ -31,9 +31,12 @@ This project uses PHP 8.5. Run these commands from the repository root after
 ### [01-yield-basics.php](examples/01-yield-basics.php)
 
 Calling `countdown()` returns a `Generator` but prints nothing. The body only
-starts when `foreach` asks for the first value. The second part yields custom
-keys. The same key can appear twice, but `iterator_to_array()` keeps only the
-last one.
+starts when `foreach` asks for the first value. Without keys, the values are
+numbered 0, 1, 2 like a list.
+
+The second part yields custom keys. The same key can appear twice.
+`iterator_to_array()` runs the whole generator and collects it into an array,
+so a repeated key keeps only its last value.
 
 ```shell
 php ./003-generators/examples/01-yield-basics.php
@@ -41,9 +44,10 @@ php ./003-generators/examples/01-yield-basics.php
 
 ### [02-send.php](examples/02-send.php)
 
-A running total. `current()` runs the generator to its first `yield`. Each
-`send()` pushes an amount in, the loop adds it and the next `yield` hands the
-new total back.
+A running total. `yield` works both ways: it sends the total out and pauses,
+then receives the value passed to `send()` as `$amount`. `current()` runs the
+generator to its first `yield`. Each `send()` pushes an amount in, the loop
+adds it and the next `yield` hands the new total back.
 
 ```shell
 php ./003-generators/examples/02-send.php

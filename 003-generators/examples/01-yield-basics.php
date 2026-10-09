@@ -21,6 +21,7 @@ section('Calling countdown() runs nothing yet');
 $generator = countdown(3);
 dump(get_debug_type($generator));
 
+// Without a key, PHP numbers the values 0, 1, 2 like a list.
 section('foreach pulls one value at a time');
 foreach ($generator as $key => $value) {
     text("{$key} => {$value}");
@@ -38,5 +39,7 @@ foreach (prices() as $item => $price) {
     text("{$item} => {$price}");
 }
 
-section('iterator_to_array() keeps only the last apple');
+// iterator_to_array() runs the whole generator and collects it into an array.
+// A repeated key overwrites the earlier value, so only the last one stays.
+section('iterator_to_array() keeps only the last apple (0.9)');
 dump(iterator_to_array(prices()));

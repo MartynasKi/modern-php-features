@@ -89,6 +89,8 @@ See each topic README for explanations and example commands.
   Throwable hierarchy, TypeError, ValueError and fixing deprecations.
 - [998: Tips and Tricks](998-tips-and-tricks/README.md): built-in functions as
   callables, hrtime(), array tricks, division and JSON flags.
+- [999: Upcoming Features](999-upcoming-features/README.md): a preview of PHP 8.6
+  with partial function application, clamp() and Duration. Run with php86.
 
 ---
 

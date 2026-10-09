@@ -87,6 +87,8 @@ See each topic README for explanations and example commands.
   compared to DOMDocument.
 - [023: Errors and Deprecations](023-errors-and-deprecations/README.md): the
   Throwable hierarchy, TypeError, ValueError and fixing deprecations.
+- [998: Tips and Tricks](998-tips-and-tricks/README.md): built-in functions as
+  callables, hrtime(), array tricks, division and JSON flags.
 
 ---
 

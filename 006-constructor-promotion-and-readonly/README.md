@@ -16,8 +16,9 @@ parameters. They cannot be `callable` or variadic.
 
 Readonly properties arrived in PHP 8.1 and readonly classes in PHP 8.2.
 
-- A readonly property can be set once, from inside the class. Any later write
-  throws an `Error`, even from inside the class.
+- A readonly property can be set once, from inside the class or, since
+  PHP 8.4, a child class. Any later write throws an `Error`, even from inside
+  the class.
 - It must have a type, because PHP needs an uninitialized state to tell
   "not set yet" from "set to null".
 - A readonly class makes every property readonly and forbids dynamic
@@ -27,6 +28,9 @@ Readonly properties arrived in PHP 8.1 and readonly classes in PHP 8.2.
 
 The rule is simple: once initialized, the property is locked. PHP does not
 track who set it or why, so there is no "set it once more" exception.
+
+PHP 8.6 adds default values for readonly properties. See
+[999: Upcoming Features](../999-upcoming-features/README.md).
 
 ## The clone problem
 

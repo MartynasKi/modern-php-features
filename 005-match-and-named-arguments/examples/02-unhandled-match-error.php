@@ -36,5 +36,5 @@ function httpMessageWithSwitch(int $code): ?string
     return null;
 }
 
-section('switch would return nothing here');
+section('switch needs a manual fallback');
 dump(httpMessageWithSwitch(500));

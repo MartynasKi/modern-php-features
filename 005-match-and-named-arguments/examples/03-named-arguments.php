@@ -38,3 +38,10 @@ try {
 } catch (Error $error) {
     dump($error->getMessage());
 }
+
+section('A name used twice throws too');
+try {
+    createUser('Ann', name: 'Bob');
+} catch (Error $error) {
+    dump($error->getMessage());
+}

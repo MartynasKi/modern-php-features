@@ -64,8 +64,8 @@ php ./005-match-and-named-arguments/examples/01-match-vs-switch.php
 ### [02-unhandled-match-error.php](examples/02-unhandled-match-error.php)
 
 `httpMessage()` has no arm for `500` and no `default`, so it throws
-`UnhandledMatchError`. The `switch` version quietly falls through and returns
-`null`.
+`UnhandledMatchError`. The `switch` version quietly falls through, so it needs
+a manual `return null` as a fallback.
 
 ```shell
 php ./005-match-and-named-arguments/examples/02-unhandled-match-error.php
@@ -75,7 +75,8 @@ php ./005-match-and-named-arguments/examples/02-unhandled-match-error.php
 
 Calls `createUser()` with positional and named arguments, then uses names with
 built-in functions such as `htmlspecialchars()`. It also spreads an array into
-named arguments and shows the `Error` for an unknown name.
+named arguments and shows the `Error` for an unknown name and for a name used
+twice.
 
 ```shell
 php ./005-match-and-named-arguments/examples/03-named-arguments.php

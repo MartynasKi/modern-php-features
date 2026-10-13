@@ -2,19 +2,34 @@
 
 Attributes add structured metadata to classes, methods, properties and
 parameters. Reflection reads that metadata at runtime. Together they power
-routing, validation and ORM mapping in modern frameworks.
+routing, validation and ORM mapping in modern frameworks like Laravel.
 
 ## How attributes work
+
+```text
+#[Attribute] class Route -> you define the attribute class
+#[Route('/users')]       -> you use it above a method
+PHP compiles it          -> stores it as metadata, nothing runs yet
+getAttributes()          -> Reflection reads the metadata
+newInstance()            -> PHP checks it and creates a Route object
+your code                -> uses the Route object, for example to register a route
+```
 
 Attributes arrived in PHP 8.0. They replace docblock annotations such as
 `@Route("/users")`, which were only comments that libraries had to parse.
 
-- An attribute is a normal class marked with `#[Attribute]`.
-- Flags such as `Attribute::TARGET_METHOD` limit where it can go.
-  `Attribute::IS_REPEATABLE` allows it more than once on the same target.
-- You place it with `#[Route('/users')]`. The arguments look like constructor
-  arguments and named arguments work too.
-- On its own, an attribute does nothing. Some code must read it.
+- An attribute is a normal class marked with `#[Attribute]` in the beginning.
+- Flags limit where it can go. Combine them with `|`.
+  - `Attribute::TARGET_CLASS`, `TARGET_METHOD`, `TARGET_PROPERTY`,
+    `TARGET_PARAMETER`, `TARGET_FUNCTION` and `TARGET_CLASS_CONSTANT`
+    allow one kind of target each.
+  - `Attribute::TARGET_CONSTANT` allows global constants (PHP 8.5).
+  - `Attribute::TARGET_ALL` allows every target. This is the default.
+  - `Attribute::IS_REPEATABLE` allows it more than once on the same target.
+- To use it, write `#[Route('/users')]`. It works like calling
+  `new Route('/users')`, named arguments included.
+- An attribute does nothing by itself. Your code has to read it with
+  Reflection and decide what to do.
 
 ## How reflection reads them
 

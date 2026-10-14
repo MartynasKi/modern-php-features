@@ -44,8 +44,10 @@ php ./008-union-intersection-dnf-types/examples/01-union-types.php
 
 ### [02-intersection-types.php](examples/02-intersection-types.php)
 
-`summary()` needs something it can count and loop over. `ArrayIterator` and
-`ArrayObject` pass. A plain array and a generator do not.
+`summary()` needs something it can count and loop over. `Countable` means the
+object works with `count()`. `Traversable` means it works with `foreach`.
+`ArrayIterator` and `ArrayObject` implement both, so they pass. A plain array
+is not an object and a generator is not countable, so both fail.
 
 ```shell
 php ./008-union-intersection-dnf-types/examples/02-intersection-types.php

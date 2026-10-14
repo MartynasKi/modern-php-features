@@ -6,7 +6,7 @@ require __DIR__ . '/../../bootstrap.php';
 
 title('null, false and true as types');
 
-// Many old functions return a value or false, like strpos().
+// Many old functions return a value or false, like strtok().
 function firstWord(string $text): string|false
 {
     return strtok($text, ' ');

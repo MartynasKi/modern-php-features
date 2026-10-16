@@ -1,6 +1,17 @@
 # 009: First-Class Callable Syntax
 
-`strlen(...)` turns a function or method into a `Closure` object.
+Sometimes you want to pass a function around instead of calling it, for
+example to `array_map()`. First-class callable syntax does this with `(...)`.
+`strlen(...)` does not call `strlen()`. It gives you a `Closure` object that
+you can call later:
+
+```php
+$length = strlen(...);
+
+echo $length('hello'); // 5
+```
+
+It works the same way for methods and static methods.
 
 ## How it works
 

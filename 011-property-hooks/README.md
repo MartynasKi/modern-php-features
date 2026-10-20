@@ -7,10 +7,16 @@ normal property syntax.
 
 Property hooks arrived in PHP 8.4.
 
+```php
+public string $email {
+    set => strtolower(trim($value));
+}
+```
+
 - A `get` hook runs on every read. A `set` hook runs on every write and
   receives the new value as `$value`.
-- Hooks run everywhere, including inside the class and the constructor. Only
-  inside its own hook does `$this->email` touch the stored value directly.
+- Hooks run everywhere, including inside the class and the constructor. Inside
+  its own hook, `$this->email` reads or writes the stored value directly.
 - Short forms: `get => expression;` returns the expression and
   `set => expression;` stores it.
 - A property whose hooks never use its own stored value is virtual. It takes
@@ -68,8 +74,8 @@ php ./011-property-hooks/examples/03-hooks-on-interfaces.php
 
 ### [04-what-they-replace.php](examples/04-what-they-replace.php)
 
-The same product price three ways: getter and setter methods, magic
-`__get()` and `__set()` and a hook. The magic version stores the string `'10'`
+The same product price three ways: with getter and setter
+methods, with magic `__get()` and `__set()` and with a hook. The magic version stores the string `'10'`
 without complaint. The hook version keeps its `int` type and blocks negative
 prices.
 

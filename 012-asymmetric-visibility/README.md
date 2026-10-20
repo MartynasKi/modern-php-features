@@ -13,17 +13,22 @@ public private(set) int $balance = 0;
 - The first keyword controls reading. The one with `(set)` controls writing.
 - `private(set)` lets only the class write. `protected(set)` also lets child
   classes write.
-- The write visibility cannot be wider than the read visibility.
+- The write visibility cannot be wider than the read visibility, so
+  `private public(set)` is not allowed.
 - The property needs a type.
 - `private(set)` on its own is short for `public private(set)`.
 
-Before PHP 8.4, the usual pattern was a private property and a public getter
-such as `balance()`. Now the property itself is the public API and only the
-class can change it.
+Before PHP 8.4, the usual pattern was a private property and a public getter.
+Now the property itself is the public API and only the class can change it.
+
+```php
+echo $account->balance();  // before
+echo $account->balance;    // PHP 8.4
+```
 
 ## Compared to readonly
 
-Both block writes from outside, but they answer different questions.
+Both block writes from outside. The difference is who can write and how often.
 
 - `readonly` means the value is set once and never changes, not even inside
   the class. Good for IDs and value objects.

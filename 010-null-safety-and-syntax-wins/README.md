@@ -1,7 +1,7 @@
 # 010: Null Safety and Small Syntax Wins
 
-A handful of small features that remove boilerplate around `null`, default
-objects and exceptions.
+Four small features that remove boilerplate: `?->`, `new` in defaults, `new`
+without extra parentheses and `throw` as an expression.
 
 ## Nullsafe operator
 
@@ -10,6 +10,9 @@ the whole chain stops and returns `null`. Otherwise it works like `->`.
 
 ```php
 $city = $user?->address()?->city;
+
+// before PHP 8.0
+$city = $user !== null && $user->address() !== null ? $user->address()->city : null;
 ```
 
 - It short-circuits. Once it hits `null`, the rest of the chain does not run,
@@ -27,8 +30,8 @@ when the default is actually used.
 public function __construct(private Logger $logger = new NullLogger()) {}
 ```
 
-It does not work for property defaults or class constants. Use constructor
-promotion for those.
+It does not work for property defaults or class constants. For a property, use a
+promoted constructor parameter instead.
 
 ## new without extra parentheses
 
@@ -94,5 +97,6 @@ from `?:` and from an arrow function.
 php ./010-null-safety-and-syntax-wins/examples/04-throw-expression.php
 ```
 
-The PHP manual has more on the [nullsafe operator](https://www.php.net/manual/en/language.oop5.basic.php#language.oop5.basic.nullsafe)
-and [new](https://www.php.net/manual/en/language.oop5.basic.php#language.oop5.basic.new).
+The PHP manual has more on the [nullsafe operator](https://www.php.net/manual/en/language.oop5.basic.php#language.oop5.basic.nullsafe),
+[new](https://www.php.net/manual/en/language.oop5.basic.php#language.oop5.basic.new)
+and [exceptions](https://www.php.net/manual/en/language.exceptions.php).

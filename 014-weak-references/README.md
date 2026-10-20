@@ -14,10 +14,18 @@ such as Laravel Octane or a queue worker, the cache keeps growing.
 
 ## How weak references work
 
-- `WeakReference` (PHP 7.4) wraps one object. `get()` returns the object or
-  `null` once it has been destroyed. It does not add to the refcount.
+```php
+$ref = WeakReference::create($user);
+unset($user);
+
+var_dump($ref->get()); // NULL
+```
+
+- `WeakReference` (PHP 7.4) wraps one object. Create it with
+  `WeakReference::create()`. `get()` returns the object or `null` once it has
+  been destroyed. It does not add to the refcount.
 - `WeakMap` (PHP 8.0) is a map with objects as keys. When a key object is
-  destroyed, its entry disappears from the map. Values are stored normally.
+  destroyed, its entry disappears from the map.
 
 A `WeakMap` is the right tool to attach extra data to objects you do not own,
 such as computed values or metadata, without leaking memory.

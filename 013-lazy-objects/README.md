@@ -7,6 +7,12 @@ waits until you actually use it.
 
 Lazy objects arrived in PHP 8.4. You create them with `ReflectionClass`.
 
+```php
+$user = new ReflectionClass(User::class)->newLazyGhost(function (User $user) {
+    $user->__construct(42);
+});
+```
+
 - `newLazyGhost($initializer)` returns an object of the real class with no
   state yet. On first use, PHP calls the initializer with the object itself,
   so it can run the constructor or fill in properties.
@@ -21,16 +27,16 @@ Some details that matter:
   method does not count until the method reads a property.
 - A class with no properties has nothing to wait for, so its lazy object
   counts as initialized right away.
-- `isUninitializedLazyObject()` tells you if the work happened yet.
-  `setRawValueWithoutLazyInitialization()` sets one property, such as an ID,
-  without starting it.
+- `ReflectionClass::isUninitializedLazyObject()` tells you if the work has
+  not happened yet. `ReflectionProperty::setRawValueWithoutLazyInitialization()`
+  sets one property, such as an ID, without starting it.
 - A ghost is the real object, so `===` comparisons stay simple. A proxy and
   its real instance are two different objects.
 
 Doctrine uses lazy ghosts for entities it has not loaded yet. Symfony's
 dependency injection container uses lazy services, so a heavy service that is
-injected but never used is never built. Before PHP 8.4, libraries generated
-proxy classes with code generation.
+injected but never used is never built. Before PHP 8.4, libraries had to
+generate proxy classes as PHP code.
 
 ## Run the examples
 

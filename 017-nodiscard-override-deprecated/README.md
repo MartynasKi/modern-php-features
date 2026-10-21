@@ -9,6 +9,11 @@ PHP itself reads these.
 Added in PHP 8.3 for methods and in PHP 8.5 for properties. It says "this
 must override something from a parent class or interface".
 
+```php
+#[\Override]
+public function toMail(): string { /* ... */ }
+```
+
 The mistake it catches: a typo in the method name, or a parent method that
 was renamed or removed. Without the attribute, PHP quietly treats the child
 method as a new method and the parent version keeps running.
@@ -27,6 +32,11 @@ Added in PHP 8.4 for functions, methods and class constants, and in PHP 8.5
 for global constants. Each use raises an `E_USER_DEPRECATED` notice with an
 optional message and `since` version.
 
+```php
+#[\Deprecated(message: 'use newPrice() instead', since: '2.0')]
+function oldPrice(): int { /* ... */ }
+```
+
 The mistake it catches: code that still calls an old API you plan to remove.
 Before PHP 8.4, libraries called `trigger_error()` by hand inside the old
 function. The attribute also lets IDEs and reflection see the deprecation
@@ -42,6 +52,14 @@ expecting it to change the original. A classic case is
 
 User functions raise `E_USER_WARNING` and built-in ones raise `E_WARNING`. If
 you really want to ignore the result, cast the call to `(void)`.
+
+```php
+#[\NoDiscard]
+function withoutEmpty(array $items): array { /* ... */ }
+
+withoutEmpty($items);         // Warning
+(void) withoutEmpty($items);  // quiet
+```
 
 ## Run the examples
 

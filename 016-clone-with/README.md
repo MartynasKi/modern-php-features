@@ -22,14 +22,14 @@ Two details worth knowing:
 - Values are converted like in non-strict mode, even with
   `declare(strict_types=1)`. The string `'16'` becomes the int `16`. A string
   such as `'big'` still throws a `TypeError`.
-- You cannot chain on the call, as in `clone($a, [...])->theme`. Assign it to
-  a variable first.
+- You cannot chain on the call, as in `clone($a, [...])->theme`. That is a
+  syntax error. Wrap the call in parentheses or assign it to a variable first.
 
 ## Withers on readonly classes
 
-This is the fix for the clone problem from
-[006: Constructor Promotion and Readonly](../006-constructor-promotion-and-readonly/README.md).
-Inside the class, a wither now changes only the property it is about:
+This fixes [the clone problem](../006-constructor-promotion-and-readonly/README.md#the-clone-problem)
+from 006: after `clone $this`, a readonly property cannot be changed. Inside
+the class, a wither now changes only the property it is about:
 
 ```php
 public function withAmount(int $amount): static
@@ -48,8 +48,8 @@ outside code to use `clone()` directly, declare the property as
 
 ## Run the examples
 
-This project uses PHP 8.5, which is also the version that introduced clone
-with. Run these commands from the repository root after `composer install`.
+This project uses PHP 8.5, the first version with clone with. Run these
+commands from the repository root after `composer install`.
 
 ### [01-clone-with.php](examples/01-clone-with.php)
 

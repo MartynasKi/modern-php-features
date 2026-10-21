@@ -27,8 +27,9 @@ The right side must be a callable that accepts exactly one argument.
 
 - First-class callables such as `trim(...)` and `$object->method(...)`.
 - Strings such as `'trim'`, invokable objects and closures.
-- An arrow function for anything that needs extra arguments. It must be
-  wrapped in parentheses, otherwise PHP stops with a fatal error.
+- An arrow function for anything that needs extra arguments, such as
+  `|> (fn($text) => explode(',', $text))`. It must be wrapped in
+  parentheses, otherwise PHP stops with a fatal error.
 
 These do not work:
 
@@ -45,16 +46,15 @@ similar left-to-right flow, but only for methods the `Collection` class has.
 The pipe operator works with any function and any type, without a wrapper
 object.
 
-The downside shows with array functions. Most of them need more than one
+The downside is array functions. Most of them need more than one
 argument and some take the array first, others second. Each step needs its
 own arrow function, so a pipe chain over arrays is often longer than the
-collection version. Pipes shine with single-argument functions.
+collection version. Pipes work best with single-argument functions.
 
 ## Run the examples
 
-This project uses PHP 8.5, which is also the version that introduced the pipe
-operator. Run these commands from the repository root after
-`composer install`.
+This project uses PHP 8.5, the first version with the pipe operator. Run these
+commands from the repository root after `composer install`.
 
 ### [01-basic-pipe.php](examples/01-basic-pipe.php)
 

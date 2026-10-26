@@ -10,7 +10,7 @@ themselves or pull in from a framework.
 | `array_is_list()` | 8.1 | `array_keys($a) === range(0, count($a) - 1)` checks |
 | `json_validate()` | 8.3 | `json_decode()` followed by a `json_last_error()` check |
 | `array_find()`, `array_find_key()` | 8.4 | A `foreach` with an early `return`, Laravel's `Arr::first($array, $callback)` |
-| `array_any()`, `array_all()` | 8.4 | `count(array_filter(...)) > 0`, Laravel's `contains()` and `every()` |
+| `array_any()`, `array_all()` | 8.4 | `count(array_filter(...)) > 0`, Laravel's collection `contains()` and `every()` |
 | `mb_trim()`, `mb_ltrim()`, `mb_rtrim()` | 8.4 | `preg_replace('/^\s+\|\s+$/u', '', $s)` |
 | `mb_ucfirst()`, `mb_lcfirst()` | 8.4 | Hand-written multibyte `ucfirst()` helpers |
 | `array_first()`, `array_last()` | 8.5 | `reset()` and `end()`, Laravel's `Arr::first()` and `Arr::last()` |
@@ -55,8 +55,8 @@ php ./018-array-and-string-functions/examples/02-array-first-and-last.php
 ### [03-array-is-list.php](examples/03-array-is-list.php)
 
 Checks five arrays. A gap after `unset()` or keys in the wrong order mean it
-is not a list. That is exactly what decides whether `json_encode()` writes a
-JSON array or an object.
+is not a list. The same check decides whether `json_encode()` writes a JSON
+array or an object.
 
 ```shell
 php ./018-array-and-string-functions/examples/03-array-is-list.php
@@ -74,9 +74,9 @@ php ./018-array-and-string-functions/examples/04-json-validate.php
 ### [05-mb-trim.php](examples/05-mb-trim.php)
 
 `trim()` leaves a no-break space and an ideographic space in place.
-`mb_trim()` removes them. It also trims custom multibyte characters, and
-`mb_ucfirst()` capitalizes the Lithuanian word "ąžuolas" where `ucfirst()`
-cannot.
+`mb_trim()` removes them. It also trims custom multibyte characters. Then
+`mb_ucfirst()` capitalizes the Lithuanian word "ąžuolas", which `ucfirst()`
+cannot do.
 
 ```shell
 php ./018-array-and-string-functions/examples/05-mb-trim.php

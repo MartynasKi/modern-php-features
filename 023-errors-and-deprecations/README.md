@@ -11,7 +11,7 @@ Everything you can throw implements `Throwable`, which has two branches:
 ```text
 Throwable
 ├── Exception        problems your code expects and handles
-│   ├── RuntimeException, LogicException, JsonException, ...
+│   └── RuntimeException, LogicException, JsonException, ...
 └── Error            mistakes in the code itself
     ├── TypeError
     │   └── ArgumentCountError
@@ -19,6 +19,16 @@ Throwable
     ├── ArithmeticError
     │   └── DivisionByZeroError
     └── UnhandledMatchError, ...
+```
+
+```php
+try {
+    intdiv(1, 0);
+} catch (Exception $e) {
+    // never reached, DivisionByZeroError is an Error
+} catch (Throwable $e) {
+    echo $e::class; // DivisionByZeroError
+}
 ```
 
 `catch (Exception $e)` does not catch an `Error`. Use `catch (Throwable $e)`

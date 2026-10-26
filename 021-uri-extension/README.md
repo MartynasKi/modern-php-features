@@ -1,7 +1,7 @@
 # 021: URI Extension
 
-PHP finally has a real URL parser that follows the standards, with objects you
-can read and modify.
+Since PHP 8.5, PHP has a URL parser that follows the standards, with objects
+you can read and modify.
 
 ## How it works
 
@@ -16,6 +16,15 @@ classes for two standards:
   exactly as a browser sees it.
 
 Both classes work the same way:
+
+```php
+use Uri\Rfc3986\Uri;
+
+$uri = new Uri('https://example.com/blog?page=2');
+
+echo $uri->getHost();                      // example.com
+echo $uri->withPath('/about')->toString(); // https://example.com/about?page=2
+```
 
 - `new Uri($string)` throws on invalid input. `Uri::parse($string)` returns
   `null` instead.
@@ -44,9 +53,8 @@ problems it fixed while parsing.
 
 ## Run the examples
 
-This project uses PHP 8.5, which is also the version that introduced the URI
-extension. Run these commands from the repository root after
-`composer install`.
+This project uses PHP 8.5, the first version with the URI extension. Run these
+commands from the repository root after `composer install`.
 
 ### [01-rfc3986-uri.php](examples/01-rfc3986-uri.php)
 

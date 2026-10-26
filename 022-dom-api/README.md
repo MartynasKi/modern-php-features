@@ -7,6 +7,14 @@ PHP 8.4 added a new DOM API with a real HTML5 parser and CSS selectors.
 The new API lives in the `Dom` namespace, next to the old `DOMDocument`
 classes.
 
+```php
+$doc = Dom\HTMLDocument::createFromString($html);
+
+foreach ($doc->querySelectorAll('article.post a') as $link) {
+    echo $link->getAttribute('href');
+}
+```
+
 - `Dom\HTMLDocument::createFromString()` and `createFromFile()` parse HTML5
   the way browsers do, using the Lexbor library. No more warnings for tags
   such as `<main>` or `<article>`, and broken markup is fixed the way a
@@ -20,7 +28,7 @@ classes.
 
 The old `DOMDocument::loadHTML()` uses libxml's HTML 4 parser. It warns about
 every HTML5 tag and can build a different tree than a browser for broken
-markup. To find elements you use `getElementsByTagName()` or XPath. A simple
+markup. To find elements, you use `getElementsByTagName()` or XPath. A simple
 class check in XPath needs a long `concat(' ', normalize-space(@class), ' ')`
 trick to avoid matching `post-list` when you want `post`.
 

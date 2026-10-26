@@ -15,7 +15,18 @@ The Random extension arrived in PHP 8.2. It has two parts:
   `shuffleArray()`, `pickArrayKeys()`, `shuffleBytes()` and `getBytes()`.
   PHP 8.3 added `getFloat()`, `nextFloat()` and `getBytesFromString()`.
 
-`new Randomizer()` without an engine uses `Secure`.
+All engines live in the `Random\Engine` namespace. `new Randomizer()` without
+an engine uses `Secure`.
+
+```php
+use Random\Engine\Xoshiro256StarStar;
+use Random\Randomizer;
+
+$secure = new Randomizer();
+$seeded = new Randomizer(new Xoshiro256StarStar(42));
+
+echo $seeded->getInt(1, 6); // the same number on every run
+```
 
 ## Secure vs deterministic
 
@@ -40,7 +51,7 @@ assert an exact result.
 ## Run the examples
 
 This project uses PHP 8.5, but the Random extension works since PHP 8.2.
-`getFloat()` and `getBytesFromString()` need PHP 8.3. Run these commands from
+`getFloat()`, `nextFloat()` and `getBytesFromString()` need PHP 8.3. Run these commands from
 the repository root after `composer install`.
 
 ### [01-randomizer.php](examples/01-randomizer.php)

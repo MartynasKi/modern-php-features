@@ -5,6 +5,16 @@ only known at runtime.
 
 ## How it works
 
+```php
+class User
+{
+    final public const string PRIMARY_KEY = 'id';
+}
+
+$name = 'PRIMARY_KEY';
+echo User::{$name}; // id
+```
+
 - Final class constants (PHP 8.1): `final public const PRIMARY_KEY = 'id'`
   stops child classes from overriding it. Since PHP 8.1, interface constants
   can also be overridden unless they are final.
@@ -32,7 +42,7 @@ Overriding a final constant fails in a similar way:
 Fatal error: Post::PRIMARY_KEY cannot override final constant Model::PRIMARY_KEY
 ```
 
-Neither can be caught with `try`.
+Both are compile-time errors, so neither can be caught with `try`.
 
 ## Run the examples
 
